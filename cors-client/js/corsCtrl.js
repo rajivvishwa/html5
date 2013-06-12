@@ -2,7 +2,7 @@ angular.module('Test', ['ngResource']).controller('corsCtrl', function ($scope, 
     $http.defaults.useXDomain = true;
 
     $scope.useHttp = function() {
-        $http.get('../../cors-server/')
+        $http.get('http://google.com')
             .success(function(data) {
                 alert(data.ok);
             });
