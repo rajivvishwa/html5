@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>Cors Demo</title>
+	</style> <!-- Ugly Hack due to jsFiddle issue: http://goo.gl/BUfGZ --> 
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular-resource.min.js"></script>
+	<script src="js/corsCtrl.js"></script>
+</head>
+<body>
+	<div ng-app="Test">
+	    <div ng-controller="corsCtrl">
+	        <button ng-click="useHttp()">$http.get request</button>
+	        <button ng-click="useResource()">$resource request</button>    
+	    </div>
+	</div>
+</body>
+</html>
