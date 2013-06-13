@@ -1,10 +1,23 @@
-angular.module('Test', ['ngResource']).controller('corsCtrl', function ($scope, $http, $resource) {
+angular.module('CorsTest', ['ngResource']).controller('corsCtrl', function ($scope, $http, $resource) {
     $http.defaults.useXDomain = true;
 
-    $scope.useHttp = function() {
-        $http.get('http://google.com')
+    url0="http://ricardohbin.com/cors/testcors.php";
+    url="../cors-server/test.json";  
+    
+    $scope.isAllowed = function() {
+        $http.get(url)
             .success(function(data) {
-                alert(data.ok);
+                $scope.corsData = data.first;
+            });
+    };
+
+    $scope.isNotAllowed = function() {
+        $http.get('http://api.twitter.com/help/test.json')
+            .success(function(data) {
+                alert(data);
+            })
+            .error(function(data, headers) {
+                alert(data); 
             });
     };
 
