@@ -30,4 +30,11 @@
 }.data{
 	font-family: 'Courier New';
 	font-size: 0.8em;
+	color: #6633ff;
+}
+fieldset {
+  padding: 1em;
+ }
+form {
+  width:500px;
 }

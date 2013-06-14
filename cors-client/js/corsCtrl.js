@@ -1,28 +1,35 @@
 angular.module('CorsTest', ['ngResource']).controller('corsCtrl', function ($scope, $http, $resource) {
     $http.defaults.useXDomain = true;
 
-    url0="http://ricardohbin.com/cors/testcors.php";
-    url="../cors-server/test.json";  
+    urlA="../cors-server/test.json"; 
+    urlA1="http://ricardohbin.com/cors/testcors.php";
+    urlNA="http://api.twitter.com/help/test.json";
+    CORS_ERROR = "Error - Cors Not Enabled";
     
     $scope.isAllowed = function() {
-        $http.get(url)
-            .success(function(data) {
-                $scope.corsData = data.first;
+        $http.get(url=urlA1)
+            .success(function(data,status) {
+                $scope.corsData = data;
+                $scope.corsURL = url;
+                $scope.corsStatus = status;
             });
     };
 
     $scope.isNotAllowed = function() {
-        $http.get('http://api.twitter.com/help/test.json')
+        $http.get(url=urlNA)
             .success(function(data) {
-                alert(data);
+                $scope.corsData = data;
             })
-            .error(function(data, headers) {
-                alert(data); 
+            .error(function(data, status) {
+                $scope.corsData = CORS_ERROR;
+                $scope.corsURL = url;
+                $scope.corsStatus = status;
+
             });
     };
 
     $scope.useResource = function() {
-        var User = $resource('http://ricardohbin.com/cors/testcors.php', {
+        var User = $resource(url=urlA1, {
             userId: '@id'
         });
         User.get({
