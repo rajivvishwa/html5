@@ -1,7 +1,7 @@
 <?php
 
 // Specify domains from which requests are allowed
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://dev:8888');
 
 // Specify which request methods are allowed
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -36,7 +36,7 @@ if (isset($HTTP_RAW_POST_DATA)) {
     }
 }
 
-echo 'Hello CORS, this is '
+echo 'CORS Test - OK. '
      . $_SERVER['SERVER_NAME'] . PHP_EOL
      .'You sent a '.$_SERVER['REQUEST_METHOD'] . ' request.' . PHP_EOL;
 
