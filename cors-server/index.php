@@ -1,36 +1,51 @@
-<? php
-/**
- *  An example CORS-compliant method.  It will allow any GET, POST, or OPTIONS requests from any
- *  origin.
- *
- *  In a production environment, you probably want to be more restrictive, but this gives you
- *  the general idea of what is involved.  For the nitty-gritty low-down, read:
- *
- *  - https://developer.mozilla.org/en/HTTP_access_control
- *  - http://www.w3.org/TR/cors/
- *
+<?php
+// var urlA2="http://rajivvishwa.kd.io/appsec/html5/cors-server/";
+
+
+// Specify domains from which requests are allowed
+header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Origin: http://appsec");
+header("Access-Control-Allow-Credentials: true ");
+header("Access-Control-Allow-Methods: OPTIONS, GET, POST");
+header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
+
+// Specify which request methods are allowed
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+
+/*
+ * jQuery < 1.4.0 adds an X-Requested-With header which requires pre-flighting
+ * requests. This involves an OPTIONS request before the actual GET/POST to 
+ * make sure the client is allowed to send the additional headers.
+ * We declare what additional headers the client can send here.
  */
 
-// Allow from any origin
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Max-Age: 86400');    // cache for 1 day
+// Additional headers which may be sent along with the CORS request
+header('Access-Control-Allow-Headers: X-Requested-With');
+
+// Set the age to 1 day to improve speed/caching.
+header('Access-Control-Max-Age: 86400');
+
+// Exit early so the page isn't fully loaded for options requests
+if (strtolower($_SERVER['REQUEST_METHOD']) == 'options') {
+    exit();
 }
 
-// Access-Control headers are received during OPTIONS requests
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
-    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
-
-    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
-    exit(0);
+// If raw post data, this could be from IE8 XDomainRequest
+// Only use this if you want to populate $_POST in all instances
+if (isset($HTTP_RAW_POST_DATA)) {
+    $data = explode('&', $HTTP_RAW_POST_DATA);
+    foreach ($data as $val) {
+        if (!empty($val)) {
+            list($key, $value) = explode('=', $val);   
+            $_POST[$key] = urldecode($value);
+        }
+    }
 }
 
-$arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
-echo json_encode($arr);
+echo 'CORS Test - OK. '
+     . $_SERVER['SERVER_NAME'] . PHP_EOL
+     .'You sent a '.$_SERVER['REQUEST_METHOD'] . ' request.' . PHP_EOL;
 
-?>
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    echo 'Your name is ' . htmlentities($_POST['name']);
+}
